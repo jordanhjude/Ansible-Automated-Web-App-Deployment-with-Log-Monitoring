@@ -1,0 +1,19 @@
+# Python cache files (if using any Python scripts)
+__pycache__/
+*.pyc
+
+# Ansible temporary files
+*.retry
+
+# Logs
+*.log
+
+# SSH private keys (if ever used locally)
+*.pem
+*.key
+
+# Vim/IDE files
+*.swp
+*.swo
+.idea/
+.vscode/
