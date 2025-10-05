@@ -1,0 +1,24 @@
+---
+- name: Ensure Logwatch is installed
+  apt:
+    name: logwatch
+    state: present
+  become: true
+
+- name: Create daily cron job for Logwatch
+  copy:
+    dest: /etc/cron.daily/logwatch
+    content: |
+      #!/bin/bash
+      /usr/sbin/logwatch --output stdout --range today --detail high >> /var/log/logwatch.log
+    mode: '0755'
+  become: true
+
+- name: Run Logwatch once for immediate report
+  command: logwatch --output stdout --range today --detail high
+  register: logwatch_output
+  changed_when: false
+
+- debug:
+    var: logwatch_output.stdout
+

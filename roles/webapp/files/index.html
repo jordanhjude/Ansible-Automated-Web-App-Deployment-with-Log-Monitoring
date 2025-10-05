@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My DevOps Web App</title>
+    <style>
+        /* Reset some default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 1rem;
+            background-color: rgba(0,0,0,0.5);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        article {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.8rem 2rem;
+            border-left: 5px solid #ffd700;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        article:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        article h2 {
+            margin-bottom: 0.8rem;
+            color: #ffd700;
+        }
+
+        article p {
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: rgba(0,0,0,0.7);
+            font-size: 1.1rem;
+        }
+
+        footer a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            main {
+                padding: 1rem;
+            }
+
+            article {
+                padding: 1.5rem 1rem;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to My DevOps Web App!</h1>
+        <p>Fully automated, containerized, and ready for monitoring</p>
+    </header>
+
+    <main>
+        <article>
+            <h2>About My Project</h2>
+            <p>This is a fully deployed web app running on Docker containers, managed by Ansible, and using MySQL as the backend database. Everything is automated and ready for monitoring!</p>
+        </article>
+
+        <article>
+            <h2>DevOps Tips</h2>
+            <p>Use Ansible roles and playbooks to keep your deployments consistent. Always monitor your logs and automate repetitive tasks using Cron or Anacron.</p>
+        </article>
+
+        <article>
+            <h2>Next Steps</h2>
+            <p>Enhance this app by adding dynamic content using PHP or Python Flask, connect it to your MySQL database, and implement real-time log monitoring for a professional showcase.</p>
+        </article>
+    </main>
+
+    <footer>
+        Go check my page: <a href="https://iamjudejordanh.online/" target="_blank">iamjudejordanh.online</a>
+    </footer>
+</body>
+</html>
+

@@ -1,0 +1,25 @@
+---
+# tasks file for webapp
+- name: Install Apache
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+  async: 600
+  poll: 0
+  register: apache_install_job
+
+- name: Copy wb app files
+  copy:
+    src: index.html
+    dest: /var/www/html/index.html
+    owner: www-data
+    group: www-data
+    mode: 0644
+
+- name: Start Apache safely in container
+  shell: |
+    pkill apache2 || true
+    /usr/sbin/apache2ctl -D FOREGROUND &
+  args:
+    executable: /bin/bash

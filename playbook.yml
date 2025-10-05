@@ -1,0 +1,19 @@
+---
+
+- name: Deploy MySQL
+  hosts: db
+  become: true
+  roles:
+    - mysql
+
+- name: Deploy Web App
+  hosts: web
+  become: true
+  roles:
+    - webapp
+
+- name: Deploy Logs Monitoring
+  hosts: logs
+  become: true
+  roles:
+    - logs

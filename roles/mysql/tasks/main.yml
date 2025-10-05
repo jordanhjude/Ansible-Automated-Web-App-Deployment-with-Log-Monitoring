@@ -1,0 +1,85 @@
+---
+# 1️⃣ Install MariaDB server
+- name: Install MariaDB server
+  apt:
+    name: mariadb-server
+    state: present
+  become: yes
+
+# 2️⃣ Detect if systemd exists (full VM vs container)
+- name: Detect if systemd exists
+  stat:
+    path: /run/systemd/system
+  register: systemd_dir
+
+# 3️⃣ Start MariaDB service on full VM
+- name: Start MariaDB service (VM)
+  service:
+    name: mariadb
+    state: started
+    enabled: yes
+  become: yes
+  when: systemd_dir.stat.exists
+
+# 4️⃣ Start MariaDB in container
+- name: Start MariaDB safely in container
+  shell: |
+    pkill mariadbd || true
+    rm -rf /run/mysqld/*
+    mkdir -p /run/mysqld
+    chown mysql:mysql /run/mysqld
+    mariadbd --user=mysql &
+  args:
+    executable: /bin/bash
+  when: not systemd_dir.stat.exists
+
+# 5️⃣ Wait for MariaDB TCP port to be ready
+- name: Wait for MariaDB TCP port
+  wait_for:
+    host: "{{ mysql_host }}"
+    port: "{{ mysql_port }}"
+    state: started
+    timeout: 60
+
+# Ensure root uses password authentication
+- name: Set root to use mysql_native_password
+  shell: |
+    mariadb -e "ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password;"
+    mariadb -e "SET PASSWORD FOR 'root'@'localhost' = '{{ mysql_root_password }}';"
+    mariadb -e "FLUSH PRIVILEGES;"
+  args:
+    executable: /bin/bash
+  ignore_errors: yes
+
+# 6️⃣ Set root password (skip if already set)
+- name: Ensure root password is set
+  mysql_user:
+    name: root
+    host: "{{ mysql_host }}"
+    password: "{{ mysql_root_password }}"
+    priv: '*.*:ALL'
+    state: present
+    login_host: "{{ mysql_host }}"
+    login_user: root
+    login_password: ""
+  ignore_errors: yes
+
+# 7️⃣ Create application database
+- name: Create application database (root via socket)
+  mysql_db:
+    name: "{{ mysql_app_db }}"
+    state: present
+    login_user: root
+    login_unix_socket: /run/mysqld/mysqld.sock
+
+# 8️⃣ Create application user and grant privileges
+- name: Create application user (root via socket)
+  mysql_user:
+    name: "{{ mysql_app_user }}"
+    password: "{{ mysql_app_password }}"
+    priv: "{{ mysql_app_db }}.*:ALL"
+    host: "%"
+    state: present
+    login_user: root
+    login_unix_socket: /run/mysqld/mysqld.sock
+
