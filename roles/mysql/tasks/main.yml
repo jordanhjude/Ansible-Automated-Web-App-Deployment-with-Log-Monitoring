@@ -1,18 +1,18 @@
 ---
-# 1️⃣ Install MariaDB server
+# Install MariaDB server
 - name: Install MariaDB server
   apt:
     name: mariadb-server
     state: present
   become: yes
 
-# 2️⃣ Detect if systemd exists (full VM vs container)
+# Detect if systemd exists (full VM vs container)
 - name: Detect if systemd exists
   stat:
     path: /run/systemd/system
   register: systemd_dir
 
-# 3️⃣ Start MariaDB service on full VM
+# Start MariaDB service on full VM
 - name: Start MariaDB service (VM)
   service:
     name: mariadb
@@ -21,7 +21,7 @@
   become: yes
   when: systemd_dir.stat.exists
 
-# 4️⃣ Start MariaDB in container
+#  Start MariaDB in container
 - name: Start MariaDB safely in container
   shell: |
     pkill mariadbd || true
@@ -33,7 +33,7 @@
     executable: /bin/bash
   when: not systemd_dir.stat.exists
 
-# 5️⃣ Wait for MariaDB TCP port to be ready
+# Wait for MariaDB TCP port to be ready
 - name: Wait for MariaDB TCP port
   wait_for:
     host: "{{ mysql_host }}"
@@ -51,7 +51,7 @@
     executable: /bin/bash
   ignore_errors: yes
 
-# 6️⃣ Set root password (skip if already set)
+# Set root password (skip if already set)
 - name: Ensure root password is set
   mysql_user:
     name: root
@@ -64,7 +64,7 @@
     login_password: ""
   ignore_errors: yes
 
-# 7️⃣ Create application database
+#  Create application database
 - name: Create application database (root via socket)
   mysql_db:
     name: "{{ mysql_app_db }}"
@@ -72,7 +72,7 @@
     login_user: root
     login_unix_socket: /run/mysqld/mysqld.sock
 
-# 8️⃣ Create application user and grant privileges
+# Create application user and grant privileges
 - name: Create application user (root via socket)
   mysql_user:
     name: "{{ mysql_app_user }}"
